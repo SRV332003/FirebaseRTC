@@ -1,5 +1,11 @@
 mdc.ripple.MDCRipple.attachTo(document.querySelector('.mdc-button'));
 
+import AudioRecorder from './recorder.js';
+
+let audioRecorder = null;
+let recordStream = new MediaStream()
+
+
 const configuration = {
   iceServers: [
     {
@@ -77,7 +83,14 @@ async function createRoom() {
     event.streams[0].getTracks().forEach(track => {
       console.log('Add a track to the remoteStream:', track);
       remoteStream.addTrack(track);
+      if (track.kind === 'audio') {
+        recordStream.addTrack(track);
+      }
     });
+    
+   
+    audioRecorder.startRecording();
+
   });
 
   // Listening for remote session description below
@@ -187,9 +200,16 @@ async function joinRoomById(roomId) {
 async function openUserMedia(e) {
   const stream = await navigator.mediaDevices.getUserMedia(
       {video: true, audio: true});
+
+  stream.getTracks().forEach(track => {
+    if(track.kind === 'audio')
+    recordStream.addTrack(track);
+  });
+
   document.querySelector('#localVideo').srcObject = stream;
   localStream = stream;
   remoteStream = new MediaStream();
+  audioRecorder = new AudioRecorder(recordStream);
   document.querySelector('#remoteVideo').srcObject = remoteStream;
 
   console.log('Stream:', document.querySelector('#localVideo').srcObject);
@@ -235,6 +255,10 @@ async function hangUp(e) {
     });
     await roomRef.delete();
   }
+  
+  audioRecorder.stopRecording();
+
+  
 
   document.location.reload(true);
 }
