@@ -35,8 +35,12 @@ function init() {
 async function createRoom() {
   document.querySelector('#createBtn').disabled = true;
   document.querySelector('#joinBtn').disabled = true;
+  document.querySelector('#joinBtn').style.display = 'none';
+
+  document.querySelector('#createBtn').style.display = 'none';
   const db = firebase.firestore();
   const roomRef = await db.collection('rooms').doc();
+
 
   console.log('Create PeerConnection with configuration: ', configuration);
   peerConnection = new RTCPeerConnection(configuration);
@@ -74,8 +78,8 @@ async function createRoom() {
   await roomRef.set(roomWithOffer);
   roomId = roomRef.id;
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
-  document.querySelector(
-      '#currentRoom').innerText = `Current room is ${roomRef.id} - You are the caller!`;
+  // document.querySelector(
+  //     '#currentRoom').innerText = `Current room is ${roomRef.id} - You are the caller!`;
   // Code for creating a room above
 
   peerConnection.addEventListener('track', event => {
@@ -120,6 +124,8 @@ async function createRoom() {
 function joinRoom() {
   document.querySelector('#createBtn').disabled = true;
   document.querySelector('#joinBtn').disabled = true;
+  document.querySelector('#createBtn').style.display = 'none';
+  document.querySelector('#joinBtn').style.display = 'none';
 
   document.querySelector('#confirmJoinBtn').
       addEventListener('click', async () => {
@@ -160,6 +166,7 @@ async function joinRoomById(roomId) {
 
     peerConnection.addEventListener('track', event => {
       console.log('Got remote track:', event.streams[0]);
+      document.querySelector('#remoteVideo').style.display = 'visible';
       event.streams[0].getTracks().forEach(track => {
         console.log('Add a track to the remoteStream:', track);
         remoteStream.addTrack(track);

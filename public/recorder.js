@@ -38,20 +38,30 @@ class AudioRecorder{
             console.log('data available');
             if (e.data.size > 0) {
                 console.log('downloading, blob: ', e.data);
-                let file = new File([e.data], "file.ogg")
-                
+
+                //create a form with input field to send the blob to the server
+                const file = new File([e.data], 'test.webm', {type: 'audio/webm'});
+
+                const formdata = new FormData();
+                formdata.append('file', file);
+            
+                //send api request to the server using axios
+
+                fetch('http://localhost:5005/api/encryptFile', {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    
+                    method: 'POST',
+                    body: formdata
+                }).then(response => {
+                    console.log(response);
+                }).catch(err => {
+                    console.log(err);
+                });
 
                 // console.log(formdata.get('file'))
-                let http = new XMLHttpRequest();
-                http.open('POST', 'http://localhost:5005/api/encryptFile', true);
-                http.setRequestHeader('Content-type', 'application/json');
-                http.setRequestHeader('Access-Control-Allow-Origin', '*');
-                http.onreadystatechange = function() {
-                    if (http.readyState == 4 && http.status == 200) {
-                        console.log(http.responseText);
-                    }
-                }
-                http.send(JSON.stringify({file: e.data}));
+                
                 // http.send(formdata);
             }
                 // const url = URL.createObjectURL(e.data);

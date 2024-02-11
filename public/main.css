@@ -6,6 +6,14 @@ body {
     padding: 0;
 }
 
+.title{
+    font-size: medium;
+    font-weight: bold;  
+    font-family: 'Inter', sans-serif;
+    align-self: start;
+    margin: 1em;
+}
+
 #message {
     background: white;
     max-width: 360px;
@@ -75,16 +83,45 @@ button {
     margin: 0.2em 0.1em;
 }
 
-div#videos {
+#videos {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: space-around;
 }
 
-div#videos > video {
+#videos video {
     background: black;
-    width: 640px;
+    width: 45vw;
     height: 100%;
     display: block;
     margin: 1em;
+    border-radius: 1rem;
+}
+
+
+#hangupBtn{
+    border-radius: 1rem;
+    background-color: #ff0000;
+
+}
+
+#hangupBtn:hover{
+    background-color: #ff6666;
+}
+
+#hangupBtn:active{
+    background-color: #ff3333;
+}
+
+#content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loader{
+    width: 45vw;
+    display: flex;
+    justify-content: space-around;
 }
